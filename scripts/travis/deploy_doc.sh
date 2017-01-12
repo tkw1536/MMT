@@ -1,8 +1,8 @@
 #!/bin/bash
 
-SOURCE_BRANCH="master"
+SOURCE_BRANCH="stable"
 if [ "$TRAVIS_PULL_REQUEST" != "false" -o "$TRAVIS_BRANCH" != "$SOURCE_BRANCH" ]; then
-    echo "Not on the master branch; nothing to commit"
+    echo "Not on the stable branch; will not commit documentation"
     exit 0
 fi
 
@@ -23,7 +23,7 @@ ssh-add scripts/travis/deploy_key
 cd src && sbt apidoc && cd ..
 
 # Clone the git repo and do some setup
-git clone --depth 1 git@github.com:UniFormal/apidoc.git apidoc_deploy 
+git clone --depth 1 git@github.com:UniFormal/apidoc.git apidoc_deploy
 cd apidoc_deploy && git config user.name "Travis CI" && cd ..
 cd apidoc_deploy && git config user.email "$COMMIT_AUTHOR_EMAIL" && cd ..
 

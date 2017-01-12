@@ -47,8 +47,23 @@ Finally, you want to push these changes back into your fork:
 git push
 ```
 
+It is also possible to directly merge changes directly from another fork -- for example the fork of a different repository. To do this you need to add a seperate remote and then fetch and merge from that repository:
+
+```bash
+# add a remote to their repository
+git remote add someotheruser https://github.com/some-other-user/MMT.git
+
+# fetch and merge their changes
+git fetch someotheruser
+git merge someotheruser/master
+```
+
+Also note that "master" in the ```git merge``` command refers to the master branch of the alternate repository.
+
 ### Contributing back to MMT -- creating a pull request and updating the master branch
-Once you have made your commits and have locally checked that MMT compiles properly, you are ready to contribute your changes back into the original repository. To do so, you need to create a pull request. To create a pull request, go to the page of your repository and click the "new pull request" button. All settings should already be set correctly -- all you need to do is enter a title as well as a description for the pull request.
+Once you have made your commits and have locally checked that MMT compiles properly, you are ready to contribute your changes back into the original repository. To do so, you need to create a pull request.
+
+To avoid merge conflicts during the pull request, please first sync your fork. Then, to create a pull request, go to the page of your repository and click the "new pull request" button. All settings should already be set correctly -- all you need to do is enter a title as well as a description for the pull request.
 
 In the next step, the Travis tests will be run automatically. This may take a few minutes due to the size of the code. If the tests fail, you can see the page and check what exactly went wrong. To update your changes, simply push additional changes to your fork.
 
@@ -74,6 +89,7 @@ Once someone has submitted an approving review and the TRAVIS tests have passed,
   * ```git fetch upstream``` -- get latest changes
   * ```git merge upstream/master``` -- merge them into your current branch
 * Make your local changes and ```git push``` them to your fork
+* Sync your fork again to avoid merge conflicts
 * Make a pull request by going to your fork and clicking "New pull request"
   * wait for the Travis Tests to pass
 * Wait until a maintainer merges the pull request

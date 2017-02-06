@@ -2,12 +2,25 @@
 
 (if you're looking for the TL;DR, there is one at the bottom)
 
-## Introduction -- The MMT contribution system
+This document explains the general development model of MMT. Before contributing to MMT, you should read this document to understand what is going on.
 
-Inside MMT we have two main branches and use a [fork and pull](https://help.github.com/articles/about-collaborative-development-models/) based model of collaboration. The two main branches are:
+## Introduction -- MMT Projects and Stability
 
-- master -- This branch contains a compilable version of MMT -- but no guarantees beyond that. To achieve this, we use [Travis Tests](https://travis-ci.org/UniFormal/MMT) that compile MMT and also do some minimal testing. Additionally we only allow pull requests (and no direct pushes).
-- stable -- Similar to master this should contain a compilable version of MMT. On top of this, it is manually checked for stability, that is someone says "yes, this is a good version of MMT that actually works as intended". We again use the Travis Tests as well as [reviews](https://help.github.com/articles/about-pull-request-reviews/).
+MMT consists of several sub-projects that we classify under different levels of stability. They are seperated into three types:
+
+1. Core -- These projects form the core part of MMT and they should always compile and run properly.
+2. Secondary -- These projects may no longer be under active development but we still consider them a part of the MMT project. That means at some point they compiled and were working with an old version of MMT.
+3. Experimental -- These are new projects that may or may not compile at all. We will attempt to move them into the secondary repository once they are stable enough for use.
+
+Each project commonly is a sub-folder of the ```src/``` directory. A list of projects and which category they are can be found inside the file [src/overview.txt](src/overview.txt) -- but not within this document. 
+
+## The branching system
+
+Inside MMT we have two main branches and usually use a [fork and pull](https://help.github.com/articles/about-collaborative-development-models/) based model of collaboration. The two main branches and other branches are:
+
+- master -- This branch contains a compilable version of MMT -- that means all core projects and most of the secondary ones are working. To achieve this, we use [Travis Tests](https://travis-ci.org/UniFormal/MMT) that compile MMT and also do some minimal testing. All new extensions should start from this branch and all project branches (see below) should be merged into this branch as soon as they are stable.
+- stable -- Similar to master this should contain a compilable version of MMT with core and most secondary projects working. On top of this, it is manually checked for stability, that is someone says "yes, this is a good version of MMT that actually works as intended". We again use the Travis Tests as well as [reviews](https://help.github.com/articles/about-pull-request-reviews/).
+- Project branches -- Every project of MMT (that is each independent component) can have its own branch. These branches are used to drive forward the development of the respective project. The branches may or may not compile at any point, they are used to make breaking changes to the respective project.
 
 ## Working on MMT -- working with forks
 

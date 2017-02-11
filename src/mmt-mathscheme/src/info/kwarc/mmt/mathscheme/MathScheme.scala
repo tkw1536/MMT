@@ -112,7 +112,6 @@ class Extends extends StructuralFeature("extends") {
                   case Some(_) => ???
                   case None => None
                }
-
          }
       }
 
@@ -209,11 +208,7 @@ class Combine extends StructuralFeature("combine") {
          case OMA(OMMOD(`mpath`), args @ List(OMMOD(a),OMMOD(b))) =>
             val tp = OMA(OMMOD(mpath), args)
             (LocalName("Combine_" + a.name + "_" + b.name), tp)
-         case _ =>
-          println(header)
-          println(header.getClass)
-          println(header.head)
-          ???
+         case _ => ???
       }
    }
 

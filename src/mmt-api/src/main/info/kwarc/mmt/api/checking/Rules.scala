@@ -160,6 +160,26 @@ abstract class InferenceRule(val head: GlobalName, val typOp : GlobalName) exten
    def apply(solver: Solver)(tm: Term, covered: Boolean)(implicit stack: Stack, history: History): Option[Term]
 }
 
+abstract class TheoryExpRule(head : GlobalName) extends {
+  val oftypepath = DPath(utils.URI("http", "cds.omdoc.org") / "urtheories") ? "Typed" ? "oftype"
+} with InferenceRule(head,oftypepath) {
+  def apply(solver: Solver)(tm: Term, covered: Boolean)(implicit stack: Stack, history: History): Option[Term] = {
+    implicit val solv = solver
+    val checks = apply(tm, covered)
+    if (checks) Some(OMS(ModExp.theorytype)) else None
+  }
+
+  protected def apply(tm : Term, covered: Boolean)(implicit solver : Solver, stack : Stack, history : History) : Boolean
+
+  def applicable(tm : Term) : Boolean = tm match {
+    case OMS(`head`) => true
+    case OMA(OMS(`head`), args) => true
+    case _ => false
+  }
+
+  def elaborate(prev : Context, name : Option[LocalName], df : Term)(implicit elab : (Context,Option[LocalName],Term) => Context) : Context
+}
+
 abstract class FormationRule(val headx: GlobalName, val typOpx : GlobalName) extends InferenceRule(headx,typOpx)
 abstract class IntroductionRule(val headx: GlobalName, val typOpx : GlobalName) extends InferenceRule(headx,typOpx)
 abstract class EliminationRule(val headx: GlobalName, val typOpx : GlobalName) extends InferenceRule(headx,typOpx)

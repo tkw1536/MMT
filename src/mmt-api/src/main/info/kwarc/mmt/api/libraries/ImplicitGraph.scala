@@ -124,6 +124,7 @@ class ThinGeneratedCategory {
          case ComplexTheory(cont) =>
             cont.getIncludes.foreach {i => update(OMMOD(i), to, morph)}
          case TUnion(ts) => ts.foreach {t => update(t, to, morph)}
+         case _ =>
       }
    }
    

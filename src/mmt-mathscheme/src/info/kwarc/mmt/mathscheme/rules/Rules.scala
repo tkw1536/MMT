@@ -33,7 +33,11 @@ object Extends extends {
 } with TheoryExpRule(extend.path) {
   def apply(tm: Term, covered: Boolean)(implicit solver : Solver, stack: Stack, history: History): Boolean = tm match {
     case extend(ls) =>
-      ls.forall(p => solver.check(Typing(stack,p,OMS(ModExp.theorytype))))
+      ls.foldLeft((stack.context,true))((p,t) => {
+        val ret = solver.check(Typing(Stack(p._1),t,OMS(ModExp.theorytype)))
+        (p._1 ++ solver.elaborateTheoryExpression(p._1,None,t),p._2 && ret)
+      })._2
+      //ls.forall(p => solver.check(Typing(stack,p,OMS(ModExp.theorytype))))
     case _ => false
   }
 
@@ -71,4 +75,23 @@ object Combine extends {
     case combine(ls) => ls.flatMap(elab(prev,name,_))
     case _ => Nil
   }
+}
+
+object Labcont extends {
+  val compth = new sym("LabCont")
+} with TheoryExpRule(compth.path) {
+  def apply(tm: Term, covered: Boolean)(implicit solver : Solver, stack: Stack, history: History): Boolean = tm match {
+    case compth(ls) =>
+      true
+    case _ => false
+  }
+
+  def elaborate(prev : Context, name : Option[LocalName], df : Term)(implicit elab : (Context,Option[LocalName],Term) => Context) : Context = df match {
+    case compth(ls) if ls.forall(_.isInstanceOf[OML]) => ls.map{
+      case OML(vname,vtp,vdf) =>
+        VarDecl(vname,vtp,vdf,None)
+    }
+    case _ => Nil
+  }
+
 }

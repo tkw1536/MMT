@@ -474,7 +474,17 @@ class MMTStructureChecker(objectChecker: ObjectChecker) extends Checker(objectCh
         val bodyR = checkContext(context, body)
         ComplexTheory(bodyR)
       case _ =>
-        env.errorCont(InvalidObject(t, "not a valid theory"))
+        // ??? // TODO do something with rules
+        /*
+        val (pr,valid) = {
+          val prt = ParseResult.fromTerm(t)
+          val (tR, valid) = checkTermTop(context ++ prt.unknown ++ prt.free, prt.term)
+          (ParseResult(pr.unknown, pr.free, tR), valid)
+        }
+        */
+        val prt = ParseResult.fromTerm(t)
+        objectChecker.apply(CheckingUnit(None,context,Nil,Typing(Stack(context),prt.term,OMS(ModExp.theorytype),None)),env.rules)(env.ce)
+//        env.errorCont(InvalidObject(t, "not a valid theory"))
         t
     }
   }

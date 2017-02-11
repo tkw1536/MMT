@@ -72,6 +72,14 @@ class Branchpoint(val parent: Option[Branchpoint], val delayed: List[DelayedCons
 class Solver(val controller: Controller, checkingUnit: CheckingUnit, val rules: RuleSet)
       extends CheckingCallback with Logger {
 
+  val theoryrules = rules.get(classOf[TheoryExpRule])
+  def elaborateTheoryExpression(cont : Context,name : Option[LocalName],t : Term) : Context = t match {
+    case OMMOD(mp) => IncludeVarDecl(mp,Nil)
+    case _ =>
+      val rule = theoryrules.find(_.applicable(t))
+      if (rule.isDefined) rule.get.elaborate(cont,name,t)(elaborateTheoryExpression) else Nil
+  }
+
    val constantContext = checkingUnit.context
    val initUnknowns = checkingUnit.unknowns
   
